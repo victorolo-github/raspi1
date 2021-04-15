@@ -1,0 +1,8 @@
+abr 07, 2021 11:40:49 AM com.virole.bitacora.Bitacora write
+INFORMACIÓN:  RASPI1 started.
+abr 07, 2021 11:40:49 AM com.virole.bitacora.Bitacora write
+INFORMACIÓN:  RASPI1 started in SIMULATION MODE: com.pi4j.wiringpi.Gpio.wiringPiSetup()I
+abr 07, 2021 11:44:42 AM com.virole.bitacora.Bitacora write
+INFORMACIÓN: Creating Controller MOCK GPIO
+abr 07, 2021 11:44:46 AM com.virole.bitacora.Bitacora write
+INFORMACIÓN: Creating PIN GPIO: 'GPIO 7'

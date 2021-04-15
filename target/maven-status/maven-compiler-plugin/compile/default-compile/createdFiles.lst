@@ -1,0 +1,8 @@
+com\ia\config\ConfigManager.class
+com\virole\raspi1\MainApp.class
+com\virole\raspi1\Raspi1Constants.class
+com\virole\bitacora\Bitacora.class
+com\virole\raspi1\mock\MockGpioFactory.class
+com\virole\raspi1\mock\MockGpioProvider.class
+com\virole\raspi1\mock\MockPin.class
+com\virole\raspi1\FXMLController.class
