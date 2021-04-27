@@ -26,9 +26,12 @@ public class EngineManager {
 
     private static EngineManager instance = null;
     final GpioController gpio;
-    GpioPinDigitalOutput pinEnableMotorIzq;
-    GpioPinDigitalOutput pinEnableMotorForward;
-    GpioPinDigitalOutput pinEnableMotorReverse;
+    GpioPinDigitalOutput pinEnableMotor1;
+    GpioPinDigitalOutput pinEnableMotor1Forward;
+    GpioPinDigitalOutput pinEnableMotor1Reverse;
+    GpioPinDigitalOutput pinEnableMotor2;
+    GpioPinDigitalOutput pinEnableMotor2Forward;
+    GpioPinDigitalOutput pinEnableMotor2Reverse;
 //    public static final int MOTOR_IZQ_FORWARD = RaspiPin.GPIO_04.getAddress(); // GPIO 04
 //    public static final int MOTOR_IZQ_REVERSE = RaspiPin.GPIO_05.getAddress(); // GPIO 05
 //    public static final int MOTOR_IZQ_ENABLE = 12; // RaspiPin.GPIO_18
@@ -38,21 +41,27 @@ public class EngineManager {
         if (!ConfigManager.getInstance().isModeSimulation()) {
             com.pi4j.wiringpi.Gpio.wiringPiSetup();
             gpio = GpioFactory.getInstance();
-            // crear pines pwm por software (id pinEnableMotorIzq, min=0 ; max=100)
+            // crear pines pwm por software (id pinEnableMotor1, min=0 ; max=100)
 //            SoftPwm.softPwmCreate(MOTOR_IZQ_FORWARD, 0, 100);
 //            SoftPwm.softPwmCreate(MOTOR_IZQ_REVERSE, 0, 100);
-            // Este sera el pinEnableMotorIzq “enabled” del controlador para el motor 1 
-            pinEnableMotorIzq = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01);
-            pinEnableMotorForward = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_04);
-            pinEnableMotorReverse = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_05);
+            // Este sera el pinEnableMotor1 “enabled” del controlador para el motor 1 
+            pinEnableMotor1 = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01);
+            pinEnableMotor1Forward = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_04);
+            pinEnableMotor1Reverse = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_05);
+            pinEnableMotor2 = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_06);
+            pinEnableMotor2Forward = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_16);
+            pinEnableMotor2Reverse = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_15);
             Bitacora.getInstance().write(String.format(" RASPI1 GPIO 01 = ('%d').", RaspiPin.GPIO_01.getAddress()), Level.INFO);
             Bitacora.getInstance().write(String.format(" RASPI1 GPIO 04 = ('%d').", RaspiPin.GPIO_04.getAddress()), Level.INFO);
             Bitacora.getInstance().write(String.format(" RASPI1 GPIO 05 = ('%d').", RaspiPin.GPIO_05.getAddress()), Level.INFO);
         } else {
             gpio = MockGpioFactory.getInstance();
-            pinEnableMotorIzq = gpio.provisionDigitalOutputPin(MockPin.DIGITAL_OUTPUT_PIN_GPI18, "EnableMotorIzq", PinState.HIGH);
-            pinEnableMotorForward = gpio.provisionDigitalOutputPin(MockPin.DIGITAL_OUTPUT_PIN_GPI18, "pinEnableMotorForward", PinState.HIGH);
-            pinEnableMotorReverse = gpio.provisionDigitalOutputPin(MockPin.DIGITAL_OUTPUT_PIN_GPI18, "pinEnableMotorReverse", PinState.HIGH);
+            pinEnableMotor1 = gpio.provisionDigitalOutputPin(MockPin.DIGITAL_OUTPUT_PIN_GPI01, "EnableMotor1", PinState.HIGH);
+            pinEnableMotor1Forward = gpio.provisionDigitalOutputPin(MockPin.DIGITAL_OUTPUT_PIN_GPI04, "pinEnableMotor1Forward", PinState.HIGH);
+            pinEnableMotor1Reverse = gpio.provisionDigitalOutputPin(MockPin.DIGITAL_OUTPUT_PIN_GPI05, "pinEnableMotor1Reverse", PinState.HIGH);
+            pinEnableMotor2 = gpio.provisionDigitalOutputPin(MockPin.DIGITAL_OUTPUT_PIN_GPI06, "EnableMotor2", PinState.HIGH);
+            pinEnableMotor2Forward = gpio.provisionDigitalOutputPin(MockPin.DIGITAL_OUTPUT_PIN_GPI015, "pinEnableMotor2Forward", PinState.HIGH);
+            pinEnableMotor2Reverse = gpio.provisionDigitalOutputPin(MockPin.DIGITAL_OUTPUT_PIN_GPI016, "pinEnableMotor2Reverse", PinState.HIGH);
         }
 
     }
@@ -60,13 +69,15 @@ public class EngineManager {
     public void start() {
         // Arrancamos el motor de la izquierda
         Bitacora.getInstance().write(" RASPI1 started left engine.", Level.INFO);
-        pinEnableMotorIzq.high();
+        pinEnableMotor1.high();
+        pinEnableMotor2.high();
     }
 
     public void stop() {
         // Paramos el motor de la izquierda
         Bitacora.getInstance().write(" RASPI1 stop left engine.", Level.INFO);
-        pinEnableMotorIzq.low();
+        pinEnableMotor1.low();
+        pinEnableMotor2.low();
     }
 
     public void forward(int speed) {
@@ -78,8 +89,10 @@ public class EngineManager {
             
             Bitacora.getInstance().write(String.format(" RASPI1 engine forwarding %d.", speed), Level.INFO);
             
-            pinEnableMotorForward.high();
-            pinEnableMotorReverse.low();
+            pinEnableMotor1Forward.high();
+            pinEnableMotor1Reverse.low();
+            pinEnableMotor2Forward.low();
+            pinEnableMotor2Reverse.high();
             
         } else {
             Bitacora.getInstance().write(String.format(" RASPI1 SIMULATION MODE engine forwarding %d.", speed), Level.INFO);
@@ -94,14 +107,52 @@ public class EngineManager {
 //            SoftPwm.softPwmWrite(MOTOR_IZQ_REVERSE, speed);
             Bitacora.getInstance().write(String.format(" RASPI1 engine reversing %d.", speed), Level.INFO);
             
-            pinEnableMotorForward.low();
-            pinEnableMotorReverse.high();
+            pinEnableMotor1Forward.low();
+            pinEnableMotor1Reverse.high();
+            pinEnableMotor2Forward.high();
+            pinEnableMotor2Reverse.low();
             
         } else {
             Bitacora.getInstance().write(String.format(" RASPI1 SIMULATION MODE engine reversing %d.", speed), Level.INFO);
         }
     }
 
+    public void right(int speed) {
+        Bitacora.getInstance().write(" RASPI1 engine reversing.", Level.INFO);
+        if (!ConfigManager.getInstance().isModeSimulation()) {
+            
+//            SoftPwm.softPwmWrite(MOTOR_IZQ_FORWARD, 0);
+//            SoftPwm.softPwmWrite(MOTOR_IZQ_REVERSE, speed);
+            Bitacora.getInstance().write(String.format(" RASPI1 engine reversing %d.", speed), Level.INFO);
+            
+            pinEnableMotor1Forward.low();
+            pinEnableMotor1Reverse.high();
+            pinEnableMotor2Forward.low();
+            pinEnableMotor2Reverse.high();
+            
+        } else {
+            Bitacora.getInstance().write(String.format(" RASPI1 SIMULATION MODE engine reversing %d.", speed), Level.INFO);
+        }
+    }
+    
+    public void left(int speed) {
+        Bitacora.getInstance().write(" RASPI1 engine reversing.", Level.INFO);
+        if (!ConfigManager.getInstance().isModeSimulation()) {
+            
+//            SoftPwm.softPwmWrite(MOTOR_IZQ_FORWARD, 0);
+//            SoftPwm.softPwmWrite(MOTOR_IZQ_REVERSE, speed);
+            Bitacora.getInstance().write(String.format(" RASPI1 engine reversing %d.", speed), Level.INFO);
+            
+            pinEnableMotor1Forward.low();
+            pinEnableMotor1Reverse.high();
+            pinEnableMotor2Forward.low();
+            pinEnableMotor2Reverse.high();
+            
+        } else {
+            Bitacora.getInstance().write(String.format(" RASPI1 SIMULATION MODE engine reversing %d.", speed), Level.INFO);
+        }
+    }
+    
     public static synchronized EngineManager getInstance() {
         if (instance == null) {
             instance = new EngineManager();

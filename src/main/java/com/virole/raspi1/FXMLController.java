@@ -21,9 +21,6 @@ import java.util.logging.Level;
 public class FXMLController implements Initializable {
     final GpioController gpio;
     final GpioPinDigitalOutput pin;
-//    final GpioPinDigitalOutput pin12;
-//    final GpioPinDigitalOutput pin16;
-//    final GpioPinDigitalOutput pin18;
     private boolean isPinLow;
     private EngineManager engineManager;
     
@@ -34,18 +31,12 @@ public class FXMLController implements Initializable {
             this.gpio = GpioFactory.getInstance();
             Bitacora.getInstance().write(String.format("Creating PIN GPIO: '%s'", RaspiPin.GPIO_07.getName()), Level.INFO);
             this.pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_07, "MyLED", PinState.HIGH);
-//            this.pin12 = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01, "MyLED12", PinState.HIGH);
-//            this.pin16 = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_04, "MyLED16", PinState.HIGH);
-//            this.pin18 = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_05, "MyLED18", PinState.HIGH);
             Bitacora.getInstance().write(String.format("End Creating PIN GPIO: '%s'", RaspiPin.GPIO_07.getName()), Level.INFO);
         } else{
             Bitacora.getInstance().write("Creating Controller MOCK GPIO", Level.INFO);
             this.gpio = MockGpioFactory.getInstance();
             Bitacora.getInstance().write(String.format("Creating PIN GPIO: '%s'", RaspiPin.GPIO_07.getName()), Level.INFO);
             this.pin = gpio.provisionDigitalOutputPin(MockPin.DIGITAL_OUTPUT_PIN_GPIO7, "MyLED", PinState.HIGH);
-//            this.pin12 = gpio.provisionDigitalOutputPin(MockPin.DIGITAL_OUTPUT_PIN_GPIO7, "MyLED", PinState.HIGH);
-//            this.pin16 = gpio.provisionDigitalOutputPin(MockPin.DIGITAL_OUTPUT_PIN_GPIO7, "MyLED", PinState.HIGH);
-//            this.pin18 = gpio.provisionDigitalOutputPin(MockPin.DIGITAL_OUTPUT_PIN_GPIO7, "MyLED", PinState.HIGH);
             
         }
         
@@ -54,9 +45,6 @@ public class FXMLController implements Initializable {
         
         isPinLow = true;
         pin.low();
-//        pin12.low();
-//        pin16.low();
-//        pin18.low();
     }
 
     

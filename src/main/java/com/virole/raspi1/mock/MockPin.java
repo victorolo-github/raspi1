@@ -69,4 +69,16 @@ public class MockPin {
                                                             EnumSet.of(PinMode.DIGITAL_OUTPUT));
     public static final Pin DIGITAL_OUTPUT_PIN_GPI18 = new PinImpl(MockGpioProvider.NAME, 2, "GPIO-18", 
                                                             EnumSet.of(PinMode.DIGITAL_OUTPUT));
+    public static final Pin DIGITAL_OUTPUT_PIN_GPI01 = new PinImpl(MockGpioProvider.NAME, 2, "GPIO-01", 
+                                                            EnumSet.of(PinMode.DIGITAL_OUTPUT));
+    public static final Pin DIGITAL_OUTPUT_PIN_GPI04 = new PinImpl(MockGpioProvider.NAME, 2, "GPIO-04", 
+                                                            EnumSet.of(PinMode.DIGITAL_OUTPUT));
+    public static final Pin DIGITAL_OUTPUT_PIN_GPI05 = new PinImpl(MockGpioProvider.NAME, 2, "GPIO-05", 
+                                                            EnumSet.of(PinMode.DIGITAL_OUTPUT));
+    public static final Pin DIGITAL_OUTPUT_PIN_GPI06 = new PinImpl(MockGpioProvider.NAME, 2, "GPIO-06", 
+                                                            EnumSet.of(PinMode.DIGITAL_OUTPUT));
+    public static final Pin DIGITAL_OUTPUT_PIN_GPI015 = new PinImpl(MockGpioProvider.NAME, 2, "GPIO-15", 
+                                                            EnumSet.of(PinMode.DIGITAL_OUTPUT));
+    public static final Pin DIGITAL_OUTPUT_PIN_GPI016 = new PinImpl(MockGpioProvider.NAME, 2, "GPIO-16", 
+                                                            EnumSet.of(PinMode.DIGITAL_OUTPUT));
 }
