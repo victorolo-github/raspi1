@@ -67,4 +67,6 @@ public class MockPin {
     
     public static final Pin DIGITAL_OUTPUT_PIN_GPIO7 = new PinImpl(MockGpioProvider.NAME, 2, "GPIO-7", 
                                                             EnumSet.of(PinMode.DIGITAL_OUTPUT));
+    public static final Pin DIGITAL_OUTPUT_PIN_GPI18 = new PinImpl(MockGpioProvider.NAME, 2, "GPIO-18", 
+                                                            EnumSet.of(PinMode.DIGITAL_OUTPUT));
 }
