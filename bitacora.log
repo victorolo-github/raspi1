@@ -1,10 +1,18 @@
-abr 30, 2021 1:38:36 PM com.virole.bitacora.Bitacora write
-INFORMACIÓN:  RASPI1 started.
-abr 30, 2021 1:38:36 PM com.virole.bitacora.Bitacora write
-INFORMACIÓN:  RASPI1 started in SIMULATION MODE: com.pi4j.wiringpi.Gpio.wiringPiSetup()I
-abr 30, 2021 1:38:36 PM com.virole.bitacora.Bitacora write
-INFORMACIÓN: Creating Controller MOCK GPIO
-abr 30, 2021 1:38:36 PM com.virole.bitacora.Bitacora write
-INFORMACIÓN: Creating PIN GPIO: 'GPIO 7'
-abr 30, 2021 1:38:36 PM com.virole.bitacora.Bitacora write
-INFORMACIÓN:  RASPI1 started left engine.
+Jun 07, 2021 3:34:27 PM com.virole.bitacora.Bitacora write
+INFO:  RASPI1 started.
+Jun 07, 2021 3:34:28 PM com.virole.bitacora.Bitacora write
+INFO:  RASPI1 started in SIMULATION MODE: com.pi4j.wiringpi.Gpio.wiringPiSetup()I
+Jun 07, 2021 3:34:28 PM com.virole.bitacora.Bitacora write
+INFO: Creating Controller MOCK GPIO
+Jun 07, 2021 3:34:28 PM com.virole.bitacora.Bitacora write
+INFO: Creating PIN GPIO: 'GPIO 7'
+Jun 07, 2021 3:34:28 PM com.virole.bitacora.Bitacora write
+INFO:  RASPI1 started left engine.
+Jun 07, 2021 3:34:28 PM com.virole.bitacora.Bitacora write
+INFO: Stream to ImageView.
+Jun 07, 2021 3:35:42 PM com.virole.bitacora.Bitacora write
+INFO: RASPI1 REMOTE COMMAND RIGHT!!!
+Jun 07, 2021 3:35:43 PM com.virole.bitacora.Bitacora write
+INFO:  RASPI1 engine right.
+Jun 07, 2021 3:35:43 PM com.virole.bitacora.Bitacora write
+INFO:  RASPI1 SIMULATION MODE engine reversing 100.

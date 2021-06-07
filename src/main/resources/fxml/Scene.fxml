@@ -96,7 +96,9 @@
             </GridPane>
          </bottom>
          <center>
-            <ImageView fx:id="imgWebCamCapturedImage" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER" />
+             <BorderPane fx:id="bpWebCamPaneHolder" prefHeight="200.0" prefWidth="200.0">
+                <ImageView fx:id="imgWebCamCapturedImage" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER" />
+             </BorderPane>
          </center>
          <top>
             <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="17.0" prefWidth="538.0" style="-fx-background-color: e6e6fa;" text="DASBOARD RASPI1" textAlignment="CENTER" BorderPane.alignment="CENTER">

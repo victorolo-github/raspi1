@@ -16,9 +16,21 @@ import com.virole.bitacora.Bitacora;
 import com.virole.raspi1.mock.MockGpioFactory;
 import com.virole.raspi1.mock.MockPin;
 import com.virole.raspi1.propulsion.EngineManager;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.logging.Level;
+import javafx.application.Platform;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.concurrent.Task;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
+import javax.imageio.ImageIO;
 
 public class FXMLController implements Initializable {
 
@@ -26,6 +38,12 @@ public class FXMLController implements Initializable {
     final GpioPinDigitalOutput pin;
     private boolean isPinLow;
     private EngineManager engineManager;
+    RemoteCommandsManager remoteCommandsManager;
+    private boolean stopCamera = false;
+    private BufferedImage grabbedImage;
+    private ObjectProperty<Image> imageProperty = new SimpleObjectProperty<Image>();
+    final int SOCKET_PORT = 1812;
+    
     @FXML
     private Button button;
     @FXML
@@ -37,6 +55,10 @@ public class FXMLController implements Initializable {
     private Button leftButton;
     @FXML
     private Button reverseButton;
+    @FXML
+    ImageView imgWebCamCapturedImage;
+    @FXML
+    private BorderPane bpWebCamPaneHolder;
 
     public FXMLController() {
         // crear controlador gpio
@@ -57,6 +79,9 @@ public class FXMLController implements Initializable {
         engineManager = EngineManager.getInstance();
         engineManager.enable();
 
+        remoteCommandsManager = new RemoteCommandsManager();
+        remoteCommandsManager.launcher(SOCKET_PORT);
+                
         isPinLow = true;
         pin.low();
     }
@@ -77,8 +102,16 @@ public class FXMLController implements Initializable {
             label.setText("Encendida 12!!!");
             Bitacora.getInstance().write(String.format("Led '%s' encendido!!!", pin.getName()), Level.INFO);
 
-            engineManager.forward(100);
+            engineManager.enable();
+            stopCamera = false;
+            Platform.runLater(new Runnable() {
 
+                @Override
+                public void run() {
+                    setImageViewSize();
+                    initializeWebCam();
+                }
+            });
         } else {
             isPinLow = true;
             pin.low();
@@ -88,51 +121,94 @@ public class FXMLController implements Initializable {
             label.setText("Apagada 12!!!");
             Bitacora.getInstance().write(String.format("Led '%s' apagado!!!", pin.getName()), Level.INFO);
 
-            engineManager.reverse(100);
+            engineManager.disable();
+            stopCamera = true;
         }
     }
+    
+    protected void setImageViewSize() {
 
-//    private void pressedLeft(ActionEvent event) {
-//        Bitacora.getInstance().write("RASPI1 FORWARED!!!", Level.INFO);
-//        engineManager.forward(100);
+        double height = bpWebCamPaneHolder.getHeight();
+        double width = bpWebCamPaneHolder.getWidth();
+        imgWebCamCapturedImage.setFitHeight(height);
+        imgWebCamCapturedImage.setFitWidth(width);
+        imgWebCamCapturedImage.prefHeight(height);
+        imgWebCamCapturedImage.prefWidth(width);
+        imgWebCamCapturedImage.setPreserveRatio(true);
+
+    }
+
+    protected void initializeWebCam() {
+
+        Task<Void> webCamIntilizer = new Task<Void>() {
+
+            @Override
+            protected Void call() throws Exception {
+                startWebCamStream();
+                return null;
+            }
+
+        };
+
+        new Thread(webCamIntilizer).start();
+    }
+
+    protected void startWebCamStream() {
+        Bitacora.getInstance().write("Start Web Cam Stream.", Level.INFO);
+        stopCamera = false;
+        Task<Void> task = new Task<Void>() {
+
+            @Override
+            protected Void call() throws Exception {
+//                FFmpegFXImageDecoder.streamToImageView(
+//            imgWebCamCapturedImage, SOCKET_PORT, 100, "h264", 96, 25000000, "ultrafast", 0);
+//                
+//                while (!stopCamera) {
+//                    try {
+//                        if ((grabbedImage = getImage()) != null) {
 //
-//    }
+//                            Platform.runLater(new Runnable() {
 //
-//    private void realeaseLeft(ActionEvent event) {
-//        Bitacora.getInstance().write("RASPI1 FORWARED!!!", Level.INFO);
-//        engineManager.forward(0);
-//    }
+//                                @Override
+//                                public void run() {
+//                                    final Image mainiamge = SwingFXUtils
+//                                            .toFXImage(grabbedImage, null);
+//                                    imageProperty.set(mainiamge);
+//                                }
+//                            });
 //
-//    private void pressedForward(ActionEvent event) {
-//        Bitacora.getInstance().write("RASPI1 FORWARED!!!", Level.INFO);
-//        engineManager.forward(100);
-//    }
+//                            grabbedImage.flush();
 //
-//    private void releasedForward(ActionEvent event) {
-//        Bitacora.getInstance().write("RASPI1 FORWARED!!!", Level.INFO);
-//        engineManager.forward(0);
-//    }
-//
-//    private void pressedRight(ActionEvent event) {
-//        Bitacora.getInstance().write("RASPI1 FORWARED!!!", Level.INFO);
-//        engineManager.forward(100);
-//    }
-//
-//    private void releaseRight(ActionEvent event) {
-//        Bitacora.getInstance().write("RASPI1 FORWARED!!!", Level.INFO);
-//        engineManager.forward(0);
-//    }
-//
-//    private void pressedReverse(ActionEvent event) {
-//        Bitacora.getInstance().write("RASPI1 FORWARED!!!", Level.INFO);
-//        engineManager.forward(100);
-//    }
-//
-//    private void releasedReverse(ActionEvent event) {
-//        Bitacora.getInstance().write("RASPI1 FORWARED!!!", Level.INFO);
-//        engineManager.forward(0);
-//    }
-//
+//                        }
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+
+                return null;
+            }
+
+        };
+        Thread th = new Thread(task);
+//        th.setDaemon(true);
+        th.start();
+//        imgWebCamCapturedImage.imageProperty().bind(imageProperty);
+
+    }
+
+    private BufferedImage getImage() {
+        BufferedImage image = null;
+        try {
+            File file = new File("./raspi1Cam.jpg");
+//            System.out.println(String.format("*** El directorio de imagenes es: %s", file.getAbsolutePath()));
+            image = ImageIO.read(file);
+        } catch (IOException e) {
+        }
+        
+        return image;
+    }
+
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
@@ -146,7 +222,7 @@ public class FXMLController implements Initializable {
 
     @FXML
     private void pressedLeft(MouseEvent event) {
-         Bitacora.getInstance().write("RASPI1 LEFT!!!", Level.INFO);
+        Bitacora.getInstance().write("RASPI1 LEFT!!!", Level.INFO);
         engineManager.left(100);
     }
 
@@ -158,7 +234,7 @@ public class FXMLController implements Initializable {
 
     @FXML
     private void pressedForward(MouseEvent event) {
-         Bitacora.getInstance().write("RASPI1 FORWARD!!!", Level.INFO);
+        Bitacora.getInstance().write("RASPI1 FORWARD!!!", Level.INFO);
         engineManager.forward(100);
     }
 

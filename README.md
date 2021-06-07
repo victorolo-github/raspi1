@@ -11,3 +11,8 @@ C:\Users\ulabvrl\Desktop\Temp\basura\Projects\rpi>mvn install:install-file -Dfil
    pi@raspberrypi:~ $ sudo apt-get install openjfx
 3) Ejecutar
    pi@raspberrypi:~ $ java --module-path /usr/share/openjfx/lib --add-modules ALL-MODULE-PATH -jar raspi1-1.0-SNAPSHOT.jar
+   
+# MANEJO DE LA WEBCAM
+1) Instalar libjpeg8:
+   sudo apt-get install libjpeg8
+   

@@ -71,6 +71,7 @@ public class EngineManager {
         Bitacora.getInstance().write(" RASPI1 started left engine.", Level.INFO);
         pinEnableMotor1.high();
         pinEnableMotor2.high();
+        stop();
     }
 
     public void disable() {
@@ -78,6 +79,7 @@ public class EngineManager {
         Bitacora.getInstance().write(" RASPI1 stop left engine.", Level.INFO);
         pinEnableMotor1.low();
         pinEnableMotor2.low();
+        stop();
     }
 
     public void forward(int speed) {
@@ -124,10 +126,10 @@ public class EngineManager {
 //            SoftPwm.softPwmWrite(MOTOR_IZQ_REVERSE, speed);
             Bitacora.getInstance().write(String.format(" RASPI1 engine reversing %d.", speed), Level.INFO);
 
-            pinMotor1Forward.low();
-            pinMotor1Reverse.high();
-            pinMotor2Forward.low();
-            pinMotor2Reverse.high();
+            pinMotor1Forward.high();
+            pinMotor1Reverse.low();
+            pinMotor2Forward.high();
+            pinMotor2Reverse.low();
 
         } else {
             Bitacora.getInstance().write(String.format(" RASPI1 SIMULATION MODE engine reversing %d.", speed), Level.INFO);
